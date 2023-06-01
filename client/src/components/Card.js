@@ -12,7 +12,7 @@ const Card = ({ title, imageUrl, description, openModal }) => {
 
   return (
     <motion.div
-      className="grid lg:grid-flow-row card bg30 text-white h-fit rounded-lg overflow-hidden border border10 min-h-[30vh] md:min-h-[680px] text-center  hover:cursor-pointer mb-4"
+      className="grid lg:grid-flow-row card bg30 text-white h-fit rounded-lg overflow-hidden   min-h-[30vh] md:min-h-[680px] text-center  hover:cursor-pointer mb-4 shadow-black shadow-md"
       initial={{ scale: 1 }}
       whileHover={{ scale: 1.05, boxShadow: "0 0 10px rgb(5, 170, 179)" }}
       transition={{ duration: 0.1, type: "tween" }}
