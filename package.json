@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "install": "run-p install:**",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon --quiet server",
     "client": "npm start --prefix client",
@@ -14,6 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.1.0",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "npm-run-all": "^4.1.5"
   }
 }
