@@ -4,7 +4,7 @@ const Modal = ({ isOpen, onClose, children }) => {
   return (
     <div
       onClick={onClose}
-      className={`fixed inset-0 flex justify-center items-center transition-colors z-[2] ${
+      className={`fixed inset-0 flex justify-center items-center transition-colors z-[3] ${
         isOpen ? "visible backdrop-blur-sm bg-black/40" : "invisible"
       }`}
     >

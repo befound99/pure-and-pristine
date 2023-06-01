@@ -10,6 +10,8 @@ import Navbar from "./components/Navbar";
 import DialogOverlay from "./components/DialogOverlay";
 import Dialog from "./components/Dialog";
 
+import PersistLogin from "./components/PersistLogin";
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -32,22 +34,47 @@ function App() {
     email: "",
     password: "",
   });
-
-  const handleLogout = () => {
-    console.log("YOU LOGGED OUT");
-    localStorage.removeItem("token");
-    setLoggedInUser(null);
-    setIsLoggedIn(false);
-    setDialog(true);
-    setDialogContent((prevContent) => ({
-      ...prevContent,
-      header: "Logout",
-      message: "Log out Success",
-      success: true,
+  const inputHandler = (e) => {
+    const { name, value } = e.target;
+    setLoginCredentials((prevValues) => ({
+      ...prevValues,
+      [name]: value.trim(),
     }));
   };
 
-  console.log(loggedInUser);
+  const handleLogin = async () => {
+    const { email, password } = loginCredentials;
+
+    if (!email.trim() || !password.trim()) {
+      alert("Please enter your email and password.");
+      return;
+    }
+
+    try {
+      const response = await Axios.post("http://localhost:3001/user/login", {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        const { user } = response.data;
+        setLoggedInUser(user.email);
+        // onClose();
+      } else {
+        console.log("Response error:", response.status);
+        alert("Invalid credentials");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      alert("An error occurred during login. Please try again.");
+    }
+  };
+
+  const handleLogout = () => {
+    setLoggedInUser(null);
+    localStorage.removeItem("loggedInUser");
+  };
+
   //service modal input state
   const [bookingInfo, setBookingInfo] = useState({
     totalPrice: 0,
@@ -105,22 +132,25 @@ function App() {
     }
   }, [loggedInUser]);
 
+  // close modal when escape is pressed
   useEffect(() => {
     window.addEventListener("keydown", closeModals);
     return () => window.removeEventListener("keydown", closeModals);
   });
 
+  // services list
   useEffect(() => {
     Axios.get("http://localhost:3001/services/get")
       .then((response) => {
         setServicesList(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error.response.data);
         // Handle error cases or display error messages
       });
   }, []);
 
+  // users list
   useEffect(() => {
     Axios.get("http://localhost:3001/users/get").then((response) => {
       setUsersList(response.data);
@@ -142,21 +172,6 @@ function App() {
         image: chloeDecker,
       },
     ]);
-  }, []);
-  // Fetch booking data based on the logged-in user
-  useEffect(() => {
-    const fetchBookingData = async () => {
-      try {
-        const response = await Axios.get("http://localhost:3001/booking/get");
-        const bookingsData = response.data;
-
-        setBookingData(bookingsData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchBookingData();
   }, []);
 
   const closeModals = (e) => {
@@ -191,6 +206,7 @@ function App() {
         logout={() => handleLogout()}
         loggedInUser={loggedInUser}
       />
+
       <Routes>
         <Route
           path="/"
@@ -216,6 +232,8 @@ function App() {
               setLoggedInUser={(matchedUser) => setLoggedInUser(matchedUser)}
               openSignUp={openSignUp}
               setLoginCredentials={(e) => setLoginCredentials(e)}
+              inputHandler={(e) => inputHandler(e)}
+              handleLogin={() => handleLogin()}
             />
           }
         />

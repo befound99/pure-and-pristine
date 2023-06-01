@@ -30,10 +30,12 @@ export default function Login({
     }
 
     try {
+      console.log("Sending login request...");
       const response = await axios.post("http://localhost:3001/user/login", {
         email,
         password,
       });
+      console.log("Response:", response.data);
       if (response.status === 200) {
         const { user } = response.data;
         setLoggedInUser(user.email);
@@ -89,7 +91,7 @@ export default function Login({
             name="email"
             className="h-8 bg-transparent border-b-[1px] border-white/90 text-white/90 text-opacity-75 focus:outline-none px-2"
             value={loginCredentials.email}
-            onInput={inputHandler}
+            onChange={inputHandler}
           />
         </div>
         {/* Password input */}
@@ -108,7 +110,7 @@ export default function Login({
             name="password"
             className="h-8 bg-transparent border-b-[1px] border-white/90 text-white/90 text-opacity-75 focus:outline-none px-2"
             value={loginCredentials.password}
-            onInput={inputHandler}
+            onChange={inputHandler}
           />
         </div>
         {/* Login button */}

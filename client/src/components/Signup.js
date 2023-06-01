@@ -1,82 +1,98 @@
 import React, { useState } from "react";
-import Axios from "axios";
+import axios from "axios";
 
-const Signup = ({ isOpen, close, openLogin }) => {
-  // Inputs
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+const Signup = ({ isOpen, close, openLogin, setDialog, setDialogContent }) => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  // Errors
   const [errors, setErrors] = useState({});
+
+  const validateField = (fieldName, regex, errorMessage) => {
+    if (!regex.test(formData[fieldName])) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [fieldName]: errorMessage,
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [fieldName]: "",
+      }));
+    }
+  };
 
   const validateEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        email: "Please enter a valid email address.",
-      }));
-    } else {
-      setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
-    }
+    validateField("email", emailRegex, "Please enter a valid email address.");
   };
 
   const validatePassword = () => {
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
-    if (!passwordRegex.test(password)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        password:
-          "Password must be 8-20 characters long, contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character.",
-      }));
-    } else {
-      setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
-    }
+    validateField(
+      "password",
+      passwordRegex,
+      "Password must be 8-20 characters long, contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character."
+    );
   };
 
   const validateConfirmPassword = () => {
-    if (confirmPassword !== password) {
+    if (formData.confirmPassword !== formData.password) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         confirmPassword: "Passwords do not match.",
       }));
     } else {
-      setErrors((prevErrors) => ({ ...prevErrors, confirmPassword: "" }));
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        confirmPassword: "",
+      }));
     }
-  };
-
-  const user = {
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    password: password,
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (Object.values(errors).some((error) => error !== "")) {
-      console.log("ERRERS IN DATA");
+      console.log("ERRORS IN DATA");
       return;
     }
+
+    const { firstName, lastName, email, password } = formData;
+
     if (
       firstName.trim() === "" ||
       lastName.trim() === "" ||
       email.trim() === "" ||
       password.trim() === "" ||
-      confirmPassword.trim() === ""
+      formData.confirmPassword.trim() === ""
     ) {
       alert("Please fill in all the fields.");
       return;
     }
 
-    Axios.post("http://localhost:3001/user/signup", user)
+    const user = {
+      firstName,
+      lastName,
+      email,
+      password,
+    };
+
+    axios
+      .post("http://localhost:3001/user/signup", user)
       .then((response) => {
-        alert("User signed up:", response.data);
+        setDialog(true);
+        setDialogContent((prevValues) => ({
+          ...prevValues,
+          header: "Signup",
+          message: "Signed up successfully",
+          success: true,
+        }));
       })
       .catch((error) => {
         alert("Error signing up:", error);
@@ -84,6 +100,7 @@ const Signup = ({ isOpen, close, openLogin }) => {
 
     close();
   };
+
   return (
     <form
       className={`relative flex flex-col bg60 p-8 rounded-lg transition-all ${
@@ -130,11 +147,18 @@ const Signup = ({ isOpen, close, openLogin }) => {
           </a>
         </div>
       </div>
+
       <div className="flex flex-col gap-2 mb-8">
-        <button className="bg-transparent border-2 px-[10px] py-[5px]  font-normal rounded-lg transition-all border-facebook text-[#2e89ff] box-glow-facebook w-full">
+        <button
+          onClick={(e) => e.preventDefault()}
+          className="bg-transparent border-2 px-[10px] py-[5px]  font-normal rounded-lg transition-all border-facebook text-[#2e89ff] box-glow-facebook w-full"
+        >
           Sign Up with Facebook <i className="fa-brands fa-facebook"></i>
         </button>
-        <button className="bg-transparent border-2 px-[10px] py-[5px]  font-normal rounded-lg transition-all border-google text-[#34a853] box-glow-google w-full">
+        <button
+          onClick={(e) => e.preventDefault()}
+          className="bg-transparent border-2 px-[10px] py-[5px]  font-normal rounded-lg transition-all border-google text-[#34a853] box-glow-google w-full"
+        >
           Sign Up with Google <i className="fa-brands fa-google"></i>
         </button>
       </div>
@@ -148,22 +172,37 @@ const Signup = ({ isOpen, close, openLogin }) => {
         <div className="grid md:grid-cols-2">
           <input
             placeholder="Firstname"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={formData.firstName}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                firstName: e.target.value,
+              }))
+            }
             className="h-8 bg-transparent border-b-[1px] border-white/90 text-white/90 text-opacity-75 focus:outline-none px-2 m-1"
           />
           <input
             placeholder="Lastname"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            value={formData.lastName}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                lastName: e.target.value,
+              }))
+            }
             className="h-8 bg-transparent border-b-[1px] border-white/90 text-white/90 text-opacity-75 focus:outline-none px-2 m-1"
           />
         </div>
         <div className="flex">
           <input
             placeholder="Email "
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                email: e.target.value,
+              }))
+            }
             onBlur={validateEmail}
             className="h-8 bg-transparent border-b-[1px] border-white/90 text-white/90 text-opacity-75 focus:outline-none px-2 m-1 flex-1"
           />
@@ -173,23 +212,31 @@ const Signup = ({ isOpen, close, openLogin }) => {
           <input
             type="password"
             placeholder="Password "
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                password: e.target.value,
+              }))
+            }
             onBlur={validatePassword}
             className="h-8 bg-transparent border-b-[1px] border-white/90 text-white/90 text-opacity-75 focus:outline-none px-2 m-1 flex-1"
           />
         </div>
         {errors.password && (
-          <p className="text-red-400 text-sm w-[500px]">{errors.password}</p>
+          <p className="text-red-500 text-sm w-[500px]">{errors.password}</p>
         )}
         <div className="flex">
           <input
             type="password"
             placeholder="Confirm Password "
-            value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-            }}
+            value={formData.confirmPassword}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                confirmPassword: e.target.value,
+              }))
+            }
             onBlur={validateConfirmPassword}
             className="h-8 bg-transparent border-b-[1px] border-white/90 text-white/90 text-opacity-75 focus:outline-none px-2 m-1 flex-1"
           />

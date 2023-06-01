@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 
 export default function Navbar({ onOpen, isLoggedIn, logout, loggedInUser }) {
   const navigation = [
-    { name: "Home", href: "#", current: true, to: "/" },
-    { name: "Services", href: "#services", current: false },
-    { name: "About us", href: "#aboutUs", current: false },
-    { name: "Contact", href: "#contactUs", current: false },
+    { name: "Home", to: "/", current: true },
+    { name: "Services", to: "/services", current: false },
+    { name: "About us", to: "/about", current: false },
+    { name: "Work with us", to: "/hiring", current: false },
   ];
 
   function classNames(...classes) {
@@ -71,13 +71,13 @@ export default function Navbar({ onOpen, isLoggedIn, logout, loggedInUser }) {
                       to="/booking"
                       className="text-white text-base font-medium transition-all underline"
                     >
-                      Hi, Pangalan Dito!
+                      Hi, {loggedInUser ? loggedInUser.firstName : ""}!
                     </Link>
                   )}
 
                   {!isLoggedIn && (
                     <a
-                      className="rounded-full  hover:scale-110 focus:scale-110 focus:outline-none transition-all box-glow "
+                      className="rounded-full  hover:scale-110 focus:scale-110 focus:outline-none transition-all box-glow hover:cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         onOpen();

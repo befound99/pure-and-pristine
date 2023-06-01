@@ -1,13 +1,22 @@
 import React from "react";
-
+import { motion } from "framer-motion";
 const About = () => {
   return (
-    <div className="bg30" id="aboutUs">
+    <motion.div
+      className="bg30 mt-[80px]"
+      id="aboutUs"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       {/* About Section */}
       <section className="py-10 max-w-7xl mx-auto">
         <div className="container mx-auto mb-6">
           {/* Main Container */}
-          <div className="bg60 mx-4 xl:mx-0 p-8 rounded-lg">
+          <motion.div
+            className="bg60 mx-4 xl:mx-0 p-8 rounded-lg"
+            initial={{ y: "-100%" }}
+            animate={{ y: 0 }}
+          >
             <h2 className="text-3xl font-bold mb-6">
               About Pure & Pristine Inc.
             </h2>
@@ -18,13 +27,18 @@ const About = () => {
               we provide unmatched expertise and tailored solutions for both
               residential and commercial spaces.
             </p>
-          </div>
+          </motion.div>
         </div>
         <div className="container mx-auto">
           {/* Grid Container */}
           <div className="grid grid-cols-1 mx-4 xl:mx-0 md:grid-cols-2 gap-8">
             {/* First Grid Item */}
-            <div className="bg60 p-8 rounded-lg">
+            <motion.div
+              className="bg60 p-8 rounded-lg"
+              initial={{ x: "-100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
               <img
                 src="https://www.svgrepo.com/show/229355/diamond-ring-diamond.svg"
                 className="h-20 w-20 mx-auto mb-4"
@@ -44,9 +58,14 @@ const About = () => {
                   diverse needs.
                 </li>
               </ul>
-            </div>
+            </motion.div>
             {/* Second Grid Item */}
-            <div className="bg60 p-8 rounded-lg">
+            <motion.div
+              className="bg60 p-8 rounded-lg"
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
               <img
                 src="https://www.svgrepo.com/show/484764/leaf.svg"
                 className="h-20 w-20 mx-auto mb-4"
@@ -62,27 +81,29 @@ const About = () => {
                   We use safe products and sustainable techniques.
                 </li>
               </ul>
-            </div>
+            </motion.div>
           </div>
           {/* Bottom Container */}
-          <div className="flex flex-col mt-8 bg60 mx-4 xl:mx-0 p-8 rounded-lg">
-            <h3 className="text-xl font-semibold mb-4">
+          <motion.div
+            className="flex flex-col mt-8 bg60 mx-4 xl:mx-0 p-8 rounded-lg"
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1 }}
+          >
+            <h3 className="text-xl font-semibold mb-4 text-center">
               Customer Satisfaction
             </h3>
-            <p className="text-lg mb-4">
+            <p className="text-lg mb-4 text-center">
               Our priority is building strong, long-lasting relationships. We
               provide exceptional service and exceed expectations.
-            </p>
-            <p className="text-lg mb-4">
-              Experience the Pure & Pristine Difference:
             </p>
             {/* <button className="bg10 box-glow transition-all text-white font-semibold py-2 px-4 rounded self-center">
               Contact Us
             </button> */}
-          </div>
+          </motion.div>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 };
 

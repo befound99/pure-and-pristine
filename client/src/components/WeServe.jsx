@@ -17,13 +17,13 @@ const WeServe = () => {
   ];
 
   return (
-    <section className="we-serve bg30 py-10">
+    <section className="we-serve bg30 py-16 flex h-[50vh]">
       <div className="container mx-auto">
         <h2 className="text-3xl text-center font-bold mb-6">We Serve</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {luzonCities.map((city) => {
             return (
-              <div className=" flex" id={city}>
+              <div className="justify-between w-1/2 flex" id={city}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

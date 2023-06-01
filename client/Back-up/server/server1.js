@@ -137,6 +137,7 @@ app.get("/users/get", (req, res) => {
   });
 });
 
+// Route to fetch booking data for the logged-in user
 app.get("/booking/get", authenticateToken, (req, res) => {
   const sql = "SELECT * FROM bookings_table";
   db.query(sql, (error, results) => {

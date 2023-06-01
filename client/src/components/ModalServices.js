@@ -3,14 +3,12 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const ModalServices = (props) => {
   const [selectedFloorArea, setSelectedFloorArea] = useState("1-40 sqm");
-  const [floorAreaValue, setFloorAreaValue] = useState(0);
+  const [floorAreaValue, setFloorAreaValue] = useState("");
   const [currentSqmPrice, setCurrentSqmPrice] = useState(props.sqmPrice);
-  const [totalPrice, setTotalPrice] = useState(0);
-
+  const [totalPrice, setTotalPrice] = useState();
   useEffect(() => {
-    setCurrentSqmPrice(props.sqmPrice + floorAreaValue * 100);
-  }, [selectedFloorArea]);
-
+    setCurrentSqmPrice(floorAreaValue * 100);
+  }, [floorAreaValue]);
   useEffect(() => {
     const calculateSubPrice = () => {
       const areaRanges = {
@@ -34,13 +32,7 @@ const ModalServices = (props) => {
       totalPrice: newTotalPrice,
       service: props.title,
     }));
-  }, [
-    currentSqmPrice,
-    selectedFloorArea,
-    props.price,
-    props.setBookingInfo,
-    props.title,
-  ]);
+  }, [currentSqmPrice, selectedFloorArea, props.price, props.title]);
 
   const citiesInLuzon = [
     "Manila",
@@ -54,6 +46,13 @@ const ModalServices = (props) => {
     "Marikina",
     // Add more cities as needed
   ];
+  const inputHandler = (e) => {
+    const { name, value } = e.target;
+    props.setBookingInfo((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
 
   const handleFloorAreaChange = (event) => {
     setSelectedFloorArea(event.target.value);
@@ -67,14 +66,6 @@ const ModalServices = (props) => {
     if (!isNaN(parsedValue) && parsedValue >= 0) {
       setFloorAreaValue(parsedValue);
     }
-  };
-
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    props.setBookingInfo((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
   };
 
   const isSqmPriceBased =
@@ -233,7 +224,13 @@ const ModalServices = (props) => {
                   props.bookingInfo.city === "" ||
                   props.bookingInfo.phone === ""
                 ) {
-                  alert("Please fill in all the fields.");
+                  props.setDialog(true);
+                  props.setDialogContent((prevValues) => ({
+                    ...prevValues,
+                    header: "Booking",
+                    message: "Please fill in all the required fields",
+                    success: false,
+                  }));
                   return;
                 } else {
                   props.openBookingModal();

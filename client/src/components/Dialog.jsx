@@ -3,7 +3,7 @@ import React from "react";
 const Dialog = (props) => {
   return (
     <div
-      className={`relative flex flex-col bg60 rounded-lg min-h-[300px] w-[500px] transition-all p-8 ${
+      className={`relative flex flex-col bg60 rounded-lg min-h-[200px]  w-[500px] transition-all pt-8 ${
         props.isOpen
           ? "visible translate-y-1-0 opacity-100"
           : "invisible translate-y-full opacity-0"
@@ -16,13 +16,13 @@ const Dialog = (props) => {
         className="absolute top-1 right-1 w-8 h-8 hover:cursor-pointer"
         onClick={props.close}
       />
-      <div className="">
+      <div className="border-b-2 border-[#ffffff2c] px-8">
         <h1 className="uppercase text-3xl">{props.dialogContent.header}</h1>
       </div>
-      <div className="grow flex justify-center items-center">
+      <div className="grow flex px-8 items-center">
         <p
           className={`uppercase text-2xl ${
-            props.dialogContent.success ? "text-green-400" : "text-red-400"
+            props.dialogContent.success ? "text-green-400" : "text-red-500"
           }`}
         >
           {props.dialogContent.message}
@@ -50,7 +50,7 @@ const Dialog = (props) => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-10 h-10 ml-2 text-red-400"
+            className="w-10 h-10 ml-2 text-red-500"
           >
             <path
               strokeLinecap="round"
